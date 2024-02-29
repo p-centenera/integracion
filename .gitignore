@@ -1,0 +1,47 @@
+// ignorar .idea y .git
+        if (file.getName().equals(".idea") || file.getName().equals(".git")) {
+            return;
+        }
+
+        // si es un directorio, llamar recursivamente
+        if (file.isDirectory()) {
+            File[] files = file.listFiles();
+            if (files != null) {
+                for (File f : files) {
+                    procesar(f);
+                }
+            }
+        } else {
+            // si es un archivo, procesar
+            procesarArchivo(file);
+        }
+    }
+
+    private void procesarArchivo(File file) {
+        // ignorar archivos que no sean .java
+        if (!file.getName().endsWith(".java")) {
+            return;
+        }
+
+        // leer el archivo
+        String contenido = leerArchivo(file);
+
+        // buscar la cadena
+        if (contenido.contains(cadena)) {
+            System.out.println(file.getAbsolutePath());
+        }
+    }
+
+    private String leerArchivo(File file) {
+        StringBuilder sb = new StringBuilder();
+        try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+            String linea;
+            while ((linea = br.readLine()) != null) {
+                sb.append(linea).append("\n");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return sb.toString();
+    }
+}
